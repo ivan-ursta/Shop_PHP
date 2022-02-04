@@ -74,7 +74,7 @@
 		if ( !isset( $_POST[ 'addCatBtn' ] ) ) {
 			?>
 			<h1 class = "text-center">Category</h1>
-			<form action = "index.php?page=4" method = "post" enctype = "multipart/form-data">
+			<form action = "index.php?page=4" method = "post">
 
 				<div class = "form-group">
 					<label for = "name">Name:</label>
@@ -93,5 +93,49 @@
 
 			$category = new Category( $name );
 			$category -> intoDb();
+		}
+
+		if ( !isset( $_POST[ 'addImgBtn' ] ) ) {
+			?>
+			<h1 class = "text-center">Image</h1>
+			<form action = "index.php?page=4" method = "post" enctype = "multipart/form-data">
+
+				<div class="form-group" style = "margin-bottom: 20px">
+					<label for = "itemid">Item:</label>
+					<select name = "itemid">
+						<?php
+
+							$pdo = Tools ::connect();
+							$list = $pdo -> query( "SELECT * FROM items" );
+
+							while ( $row = $list -> fetch() ) {
+								echo '<option value="' . $row[ 'id' ] . '">' . $row[ 'itemname' ] . '</option>';
+							}
+						?>
+					</select>
+				</div>
+
+				<div class = "form-group">
+					<label for = "imagepath">Select image:</label>
+					<input type = "file" class = "" name = "imagepath">
+				</div>
+
+				<button type = "submit" class = "btn btn-primary" name = "addImgBtn">Add image</button>
+
+			</form>
+
+			<?php
+
+		} else {
+
+			if ( is_uploaded_file( $_FILES[ 'imagepath' ][ 'tmp_name' ] ) ) {
+				$path = "images/" . $_FILES[ 'imagepath' ][ 'name' ];
+				move_uploaded_file( $_FILES[ 'imagepath' ][ 'tmp_name' ], $path );
+			}
+
+			$itemid = $_POST[ 'itemid' ];
+
+			$img = new Image( $itemid ,$path);
+			$img -> intoDb();
 		}
 	}

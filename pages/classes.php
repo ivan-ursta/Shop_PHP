@@ -158,6 +158,7 @@
 				$row = $res -> fetch();
 				$customer = new Customer( $row[ 'login' ], $row[ 'pass' ], $row[ 'imagepath' ], $row[ 'id' ] );
 				return $customer;
+
 			} catch ( PDOException $e ) {
 				echo $e -> getMessage();
 				return false;
@@ -265,14 +266,13 @@
 							<?php echo $this -> rate ?> &nbsp;rate
 						</span>
 
-						<a href = "#"><img src = "<?php echo $this -> imagepath ?>" alt = ""
-										   style = "width: 200px; height: 200px"></a>
+						<a href = "#"><img src = "<?php echo $this -> imagepath ?>" alt = "" style = "width: 200px; height: 200px"></a>
 					</div>
 
 					<div class = "product-details">
 
 						<h4>
-							<a href = 'pages/itemInfo.php?name="<?php echo $this -> id ?>"'><?php echo $this -> itemname ?></a>
+							<a href = 'index.php?name=<?php echo $this -> id ?>'><?php echo $this -> itemname ?></a>
 						</h4>
 
 						<p><?php echo $this -> info ?></p>
@@ -314,31 +314,105 @@
 
 		function DrawForCart()
 		{
-			echo "<div class = 'row' style = 'margin:2px;'>";
-			echo "<img src='" . $this -> imagepath . "'width='70px' class='col-sm-1 col-md-1 col-lg-1'/>";
-			echo "<span style = 'margin-right:10px; background-color:#ddeeaa; color:blue; font-size:16pt' class='col-sm-3 col-md-3 col-lg-3'>";
-			echo $this -> itemname;
-			echo "</span>";
-			echo "<span style = 'margin-left:10px; color:red; font-size:16pt; background-color:#ddeeaa;' class='col-sm-2 col-md-2 col-lg-2' >";
-			echo "$&nbsp;" . $this -> pricesale;
-			echo "</span>";
+			?>
+			<div class = 'row' style = 'margin:2px'>
 
-			$ruser = '';
+				<img src = " <?php echo $this -> imagepath ?>" width = '70px' class = 'col-sm-1 col-md-1 col-lg-1'/>
 
-			if ( !isset( $_SESSION[ 'reg' ] ) || $_SESSION[ 'reg' ] == "" ) {
+				<span style = 'margin-right:10px; background-color:#ddeeaa; color:blue; font-size:16pt' class = 'col-sm-3 col-md-3 col-lg-3'>
+			<?php echo $this -> itemname ?></span>
 
-				$ruser = "cart_" . $this -> id;
+				<span style = 'margin-left:10px; color:red; font-size:16pt; background-color:#ddeeaa;' class = 'col-sm-2 col-md-2 col-lg-2'>
+			$&nbsp; <?php echo $this -> pricesale ?></span>
 
-			} else {
+				<?php
+					$ruser = '';
 
-				$ruser = $_SESSION[ 'reg' ] . "_" . $this -> id;
+					if ( !isset( $_SESSION[ 'reg' ] ) || $_SESSION[ 'reg' ] == "" ) {
 
-			}
+						$ruser = "cart_" . $this -> id;
 
-			echo "<button class='btn btn-sm btn-danger' style='margin-left:10px; 'onclick=eraseCookie('" . $ruser . "')>x</button>";
-			echo "</div>";
+					} else {
 
+						$ruser = $_SESSION[ 'reg' ] . "_" . $this -> id;
+
+					}
+				?>
+
+				<button class = 'btn btn-sm btn-danger' style = 'margin-left:10px; ' onclick = eraseCookie('<?php echo $ruser ?>')>
+					x
+				</button>
+
+			</div>
+			<?php
 		}
+
+
+		function DrawForInfo($images)
+		{
+			?>
+			<div class = 'row' style = 'display: flex; flex-direction: column; margin:2px;'>
+
+				<span style = 'background-color:#ddeeaa; color:blue; font-size:16pt' class = 'col-sm-3 col-md-3 col-lg-3'><?php echo $this -> itemname ?></span>
+				<div style = "display: flex; ">
+<!--					<img src = "--><?php //echo $this -> imagepath ?><!--" class = 'col-sm-4 col-md-4 col-lg-6'/>-->
+					<div class = "container text-center">
+
+						<div id = "carousel" class = "carousel slide" data-ride = "carousel" style = "display: inline-block;">
+							<div class = "carousel-inner">
+								<div class = "item active">
+									<img src = "<?php echo $this -> imagepath ?>" style="height: 30em; width: 30em" alt = "...">
+								</div>
+								<?php
+									foreach ($images as $img)
+									{
+
+										echo "<div class = 'item'>";
+										echo "<img src = '" . $img->imagepath. "' style='height: 30em; width: 30em' alt = '...'>";
+										echo "</div>";
+									}
+
+								?>
+							</div>
+
+							<!-- Элементы управления -->
+							<a class = "left carousel-control" href = "#carousel" role = "button" data-slide = "prev">
+								<span class = "glyphicon glyphicon-chevron-left" aria-hidden = "true"></span>
+								<span class = "sr-only">Предыдущий</span>
+							</a>
+							<a class = "right carousel-control" href = "#carousel" role = "button" data-slide = "next">
+								<span class = "glyphicon glyphicon-chevron-right" aria-hidden = "true"></span>
+								<span class = "sr-only">Следующий</span>
+							</a>
+
+						</div>
+
+					</div>
+
+					<span style = 'margin-left:10px; margin-top: 100px; color:red; height: 1.5em; font-size:16pt; background-color:#ddeeaa;' class = 'col-sm-2 col-md-2 col-lg-2'><?php echo "$&nbsp;" . $this -> pricesale ?></span>
+
+				</div>
+
+				<p style = 'font-size:16pt; background-color:#ddeeaa;' class = ''><?php echo $this -> info ?></p>
+
+				<?php
+					$ruser = '';
+
+					if ( !isset( $_SESSION[ 'reg' ] ) || $_SESSION[ 'reg' ] == "" ) {
+
+						$ruser = "cart_" . $this -> id;
+
+					} else {
+
+						$ruser = $_SESSION[ 'reg' ] . "_" . $this -> id;
+
+					}
+				?>
+
+			</div>
+			<?php
+		}
+
 
 		function Sale()
 		{
@@ -350,17 +424,17 @@
 					$ruser = $_SESSION[ 'reg' ];
 				}
 
-				//Incresing total field for Customer
+//Incresing total field for Customer
 				$sql = "UPDATE Customers SET total=total+ ? WHERE login = ?";
 				$ps = $pdo -> prepare( $sql );
 				$ps -> execute( array( $this -> pricesale, $ruser ) );
 
-				//Inserting info about sold item into table Sales
+//Inserting info about sold item into table Sales
 				$ins = "insert into Sales(customername, itemname, pricein, pricesale, datesale)values(?,?,?,?,?)";
 				$ps = $pdo -> prepare( $ins );
 				$ps -> execute( array( $ruser, $this -> itemname, $this -> pricein, $this -> pricesale, @date( "Y/m/d H:i:s" ) ) );
 
-				//deleting item from Items table
+//deleting item from Items table
 				$del = "DELETE FROM Items WHERE id = ?";
 				$ps = $pdo -> prepare( $del );
 				$ps -> execute( array( $this -> id ) );
@@ -403,3 +477,60 @@
 			}
 		}
 	}
+
+	class Image
+	{
+		public $id;
+		public $itemid;
+		public $imagepath;
+
+		function __construct( $itemid, $imagepath, $id = 0 )
+		{
+			$this -> itemid = $itemid;
+			$this -> imagepath = $imagepath;
+		}
+
+		function intoDb()
+		{
+			try {
+
+				$pdo = Tools ::connect();
+
+				$arr = (array)$this;
+				array_shift( $arr );
+
+				$sql = "INSERT INTO images(itemid, imagepath) VALUES (:itemid, :imagepath)";
+				$ps = $pdo -> prepare( $sql );
+				$ps -> execute( $arr );
+
+			} catch ( PDOException $e ) {
+
+				$err = $e -> getMessage();
+				if ( substr( $err, 0, strrpos( $err, ":" ) ) == 'SQLSTATE[23000]:Integrity constraint violation' ) return 1062;
+				else return $e -> getMessage();
+
+			}
+		}
+
+		static function fromDb($id)
+		{
+			$image = null;
+			try {
+				$pdo = Tools ::connect();
+				$ps = $pdo -> prepare( "SELECT * FROM Images WHERE itemid=?" );
+				$ps -> execute( array( $id ) );
+
+				while($row = $ps -> fetch()){
+					$image = new Image( $row[ 'itemid' ], $row[ 'imagepath' ], $row[ 'id' ]);
+					$images[] = $image;
+
+				}
+				return $images;
+
+			} catch ( PDOException $e ) {
+				echo $e -> getMessage();
+				return false;
+			}
+		}
+	}
+

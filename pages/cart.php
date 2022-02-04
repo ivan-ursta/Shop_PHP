@@ -29,7 +29,7 @@
 	echo "<span style='margin-left:100px;color:blue;fontsize:16pt;background-color:#fffff;' class='' >Total cost is: </span>
 	<span style='marginleft:10px; color:red; font-size:16pt; background-color:#ffffff;' class='' >" . $total . "</span>";
 
-	echo '<button type="submit" class="btn btn-success" name="suborder" style="margin-left:150px; "onkeyup=eraseCookie("' . $ruser . '")> Purchase order</button>';
+	echo '<button type="submit" class="btn btn-success" name="suborder" style="margin-left:150px;" onkeyup=eraseCookie("' . $ruser . '")> Purchase order</button>';
 
 	echo '</form>';
 
